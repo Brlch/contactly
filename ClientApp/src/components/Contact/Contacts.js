@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export class Contacts extends Component {
   static displayName = Contacts.name;
@@ -52,14 +52,10 @@ export class Contacts extends Component {
     return (
       <div>
         <h1 id="tableLabel">My contacts</h1>
-        
+
         {contents}
-        <Link
-          className="btn btn-lg btn-primary"
-          role="button"
-          to="/addeditcontact"
-        >
-          New contact <FontAwesomeIcon icon={faPlus}/>
+        <Link className="btn btn-lg btn-primary" to="/addeditcontact">
+          New contact <FontAwesomeIcon icon={faPlus} />
         </Link>
       </div>
     );

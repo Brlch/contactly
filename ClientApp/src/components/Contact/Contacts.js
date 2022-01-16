@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "reactstrap";
+import {
+  faPencilAlt,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 export class Contacts extends Component {
   static displayName = Contacts.name;
@@ -9,13 +14,25 @@ export class Contacts extends Component {
   constructor(props) {
     super(props);
     this.state = { contacts: [], loading: true };
+    this.deleteContact = this.deleteContact.bind(this);
   }
 
   componentDidMount() {
     this.populateContactData();
   }
-
-  static renderContactsTable(contacts) {
+  deleteContact = (name) => {
+    fetch("contact", {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Name: name,
+      }),
+    });
+  };
+  static renderContactsTable(contacts, deleteContact) {
     return (
       <table className="table table-striped" aria-labelledby="tableLabel">
         <thead>
@@ -32,7 +49,28 @@ export class Contacts extends Component {
               <td>{contact.name}</td>
               <td>{contact.email}</td>
               <td>{contact.phone}</td>
-              <td></td>
+              <td>
+                <Link
+                  className="btn btn-secondary"
+                  to="/addeditcontact"
+                  state={{
+                    name: contact.name,
+                    email: contact.email,
+                    phone: contact.phone,
+                  }}
+                >
+                  Edit <FontAwesomeIcon icon={faPencilAlt} />
+                </Link>
+                <Button
+                  className="btn btn-danger"
+                  type="button"
+                  onClick={() => {
+                    deleteContact(contact.name);
+                  }}
+                >
+                  Delete <FontAwesomeIcon icon={faTrash} />
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -46,7 +84,7 @@ export class Contacts extends Component {
         <em>Loading...</em>
       </p>
     ) : (
-      Contacts.renderContactsTable(this.state.contacts)
+      Contacts.renderContactsTable(this.state.contacts, this.deleteContact)
     );
 
     return (

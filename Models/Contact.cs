@@ -1,6 +1,6 @@
 using System;
 
-namespace contactly
+namespace contactly.Models
 {
     public class Contact
     {

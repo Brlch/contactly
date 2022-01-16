@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using contactly.Models;
 
 namespace contactly.Controllers
 {
@@ -14,7 +15,7 @@ namespace contactly.Controllers
     {
         private IMemoryCache _cache;
         private readonly ILogger<ContactController> _logger;
-        private const String contactCache = "contactCache";
+
         public ContactController(ILogger<ContactController> logger, IMemoryCache memoryCache)
         {
             _logger = logger;
@@ -23,33 +24,33 @@ namespace contactly.Controllers
         [HttpGet]
         public IEnumerable<Contact> Get()
         {
-            List<Contact> contacts = new List<Contact>();
-            contacts.Add(new Contact { Name = "Test", Phone = "12312312", Email = "test@test.com" });
-            if (_cache.TryGetValue(contactCache, out contacts))
-            {
-                return contacts.ToArray();
-            }
-            else
-            {
-                contacts = new List<Contact>();
-                contacts.Add(new Contact { Name = "Test", Phone = "12312312", Email = "test@test.com" });
-                return contacts.ToArray();
-            }
+            List<Contact> contacts = Context.GetContactsFromMemory(_cache);
+            return contacts.ToArray();
         }
         [HttpPost]
-        public ActionResult Post(Contact contact)
+        public ActionResult Post([FromBody] Contact contact)
         {
-            List<Contact> contacts = new List<Contact>();
-            _cache.TryGetValue(contactCache, out contacts);
-            var existingContact = contacts.FirstOrDefault(X => X.Name == contact.Name);
-            if (existingContact != null)
-            {
-                contacts.Add(contact);
-                _cache.Set(contactCache, contacts);
-                return Content("Contact added correctly.");
-            }
-            return Content("Contact already exists.");
+            //Get context from cache memory
+            List<Contact> contacts = Context.GetContactsFromMemory(_cache);
+            //Remove previous info from memory
+            Context.RemoveFromMemory(contact, contacts, _cache);
+            //Add new info to memory
+            Context.AddToMemory(contact, contacts, _cache);
+            //Return status
+            return Content("Contact info updated.");
 
         }
+
+        [HttpDelete]
+        public ActionResult Delete([FromBody] Contact contact)
+        {
+            //Get context from cache memory
+            List<Contact> contacts = Context.GetContactsFromMemory(_cache);
+            //Add the contact information to the list
+            Context.RemoveFromMemory(contact, contacts, _cache);
+            //Return status
+            return Content("Contact info deleted.");
+        }
+
     }
 }

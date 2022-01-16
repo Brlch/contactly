@@ -20,7 +20,8 @@ export class Contacts extends Component {
   componentDidMount() {
     this.populateContactData();
   }
-  deleteContact = (name) => {
+  deleteContact = (id) => {
+    const self = this;
     fetch("contact", {
       method: "DELETE",
       headers: {
@@ -28,9 +29,12 @@ export class Contacts extends Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        Name: name,
+        Id: id,
       }),
+    }).then(()=>{
+      self.populateContactData();
     });
+
   };
   static renderContactsTable(contacts, deleteContact) {
     return (
@@ -43,9 +47,9 @@ export class Contacts extends Component {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody> 
           {contacts.map((contact) => (
-            <tr key={contact.name}>
+            <tr key={contact.id}>
               <td>{contact.name}</td>
               <td>{contact.email}</td>
               <td>{contact.phone}</td>
@@ -57,6 +61,7 @@ export class Contacts extends Component {
                     name: contact.name,
                     email: contact.email,
                     phone: contact.phone,
+                    id: contact.id
                   }}
                 >
                   Edit <FontAwesomeIcon icon={faPencilAlt} />
@@ -65,7 +70,7 @@ export class Contacts extends Component {
                   className="btn btn-danger"
                   type="button"
                   onClick={() => {
-                    deleteContact(contact.name);
+                    deleteContact(contact.id);
                   }}
                 >
                   Delete <FontAwesomeIcon icon={faTrash} />

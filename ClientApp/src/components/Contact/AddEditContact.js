@@ -18,8 +18,11 @@ const FormInputEntry = (props) => {
     </FormGroup>
   );
 };
-
+const GetRandomId = () => {
+  return (Math.floor(Math.random() * 1000) + 1000).toString();
+};
 const AddEditContact = (props) => {
+  const [id, setId] = useState(GetRandomId());
   const [name, setName] = useState(props.name);
   const [email, setEmail] = useState(props.email);
   const [phone, setPhone] = useState(props.phone);
@@ -29,10 +32,12 @@ const AddEditContact = (props) => {
   useEffect(() => {
     // Update the contact info using the browser API
     if (location.state) {
-      const { name, email, phone } = location.state;
+      const { id, name, email, phone } = location.state;
+      setId(id);
       setName(name);
       setEmail(email);
       setPhone(phone);
+      location.state = null;
     }
   });
 
@@ -44,6 +49,7 @@ const AddEditContact = (props) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        Id: id,
         Name: name,
         Email: email,
         Phone: phone,
@@ -56,6 +62,7 @@ const AddEditContact = (props) => {
   };
   return (
     <div>
+      <h1 id="tableLabel">Contact Info</h1>
       <Form className="form">
         <FormInputEntry
           name="Name"
@@ -76,7 +83,7 @@ const AddEditContact = (props) => {
           value={phone}
         ></FormInputEntry>
         <Button className="btn btn-primary" type="button" onClick={saveContact}>
-          Add contact <FontAwesomeIcon icon={faSave} />
+          Save <FontAwesomeIcon icon={faSave} />
         </Button>
         <Link className="btn btn-secondary" to="/contacts">
           Cancel <FontAwesomeIcon icon={faArrowLeft} />

@@ -33,7 +33,7 @@ namespace contactly.Controllers
             //Get context from cache memory
             List<Contact> contacts = Context.GetContactsFromMemory(_cache);
             //Remove previous info from memory
-            Context.RemoveFromMemory(contact, contacts, _cache);
+            contacts = Context.RemoveFromMemory(contact, contacts, _cache);
             //Add new info to memory
             Context.AddToMemory(contact, contacts, _cache);
             //Return status

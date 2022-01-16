@@ -16,19 +16,18 @@ namespace contactly.Models
             _cache.TryGetValue(contactCache, out contacts);
             return contacts ?? new List<Contact>();
         }
-        public static IMemoryCache RemoveFromMemory(Contact contact, List<Contact> contacts, IMemoryCache _cache)
+        public static List<Contact> RemoveFromMemory(Contact contact, List<Contact> contacts, IMemoryCache _cache)
         {
-            var existingContact = contacts.FirstOrDefault(X => X.Name == contact.Name);
+            var existingContact = contacts.FirstOrDefault(X => X.Id == contact.Id);
             if (existingContact != null)
                 contacts.Remove(existingContact);
             _cache.Set(contactCache, contacts);
-            return _cache;
+            return contacts;
         }
-        public static IMemoryCache AddToMemory(Contact contact, List<Contact> contacts, IMemoryCache _cache)
+        public static void AddToMemory(Contact contact, List<Contact> contacts, IMemoryCache _cache)
         {
             contacts.Add(contact);
             _cache.Set(contactCache, contacts);
-            return _cache;
         }
 
     }

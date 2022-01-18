@@ -1,0 +1,8 @@
+.inputInvalid {
+  font-weight: bold;
+  color: #e74c3c;
+}
+
+.position-relative.form-group{
+    margin-bottom: 0;
+}

@@ -31,10 +31,9 @@ export class Contacts extends Component {
       body: JSON.stringify({
         Id: id,
       }),
-    }).then(()=>{
+    }).then(() => {
       self.populateContactData();
     });
-
   };
   static renderContactsTable(contacts, deleteContact) {
     return (
@@ -47,7 +46,7 @@ export class Contacts extends Component {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody> 
+        <tbody>
           {contacts.map((contact) => (
             <tr key={contact.id}>
               <td>{contact.name}</td>
@@ -61,7 +60,7 @@ export class Contacts extends Component {
                     name: contact.name,
                     email: contact.email,
                     phone: contact.phone,
-                    id: contact.id
+                    id: contact.id,
                   }}
                 >
                   Edit <FontAwesomeIcon icon={faPencilAlt} />
@@ -82,7 +81,6 @@ export class Contacts extends Component {
       </table>
     );
   }
-
   render() {
     let contents = this.state.loading ? (
       <p>
